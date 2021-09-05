@@ -12,8 +12,8 @@ class Connection
     function __construct()
     {
         $this->servername="127.0.0.1";
-        $this->user = "admin";
-        $this->password = "admin";
+        $this->user = "root";
+        $this->password = "sistemas";
         $this->db = "empresa";
         $this->connection  = new PDO("mysql:host=$this->servername;dbname=$this->db", $this->user, $this->password);
 

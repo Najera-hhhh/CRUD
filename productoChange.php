@@ -25,8 +25,7 @@ error_reporting(E_ALL);
 <body>
 
     <div class="container">
-        <?php require_once "./partial/header.php" ?>
-        
+    <?php require_once "./partial/header.php" ?>
         <div class="panel">
             <form id="form-producto" class="mt-5">
                 <div class="mb-3">
@@ -46,7 +45,7 @@ error_reporting(E_ALL);
                     <input type="number" class="form-control" step="0.1" name="precio1" id="precio" required>
                 </div>
                 <div class="mb-3 mx-auto text-center">
-                    <button class="btn btn-success">Enviar</button>
+                    <button id="change" class="btn btn-success delete"><i class="fa fa-save"></i></button>
                 </div>
             </form>
             <div>
@@ -70,7 +69,48 @@ error_reporting(E_ALL);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
 
 
-    <script src="assets/js/index.js"></script>
+    <script>
+        function recharge() {
+
+            $.get("./Application/Controller/ProductosController.php", function(result) {
+
+                })
+                .done(function(result) {
+                    var productsColumns = [];
+                    $.each(JSON.parse(result), function(key, producto) {
+                        productsColumns.push(`
+                <tr>
+                    <td>${producto['idMaterial']}</td>
+                    <td>${producto['descripcion']}</td>
+                    <td>${producto['unidadMedida']}</td>
+                    <td>${producto['precio1']}</td>
+                </tr>
+            `);
+                    })
+
+                    $("tbody").html(productsColumns.join(""));
+                })
+        }
+
+        $('form').on("submit", function(e) {
+            e.preventDefault();
+
+            let data = $('form').serialize() + "&updateId=" + $('#id').val();
+
+            e.preventDefault();
+            // Create an FormData object 
+            console.log(data);
+            $.post("./Application/Controller/ProductosController.php", data)
+                .done(function(data) {
+                    console.log(data);
+                    recharge();
+                });
+
+            $('form')[0].reset();
+        })
+
+        recharge();
+    </script>
 </body>
 
 </html>

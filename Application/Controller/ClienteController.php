@@ -2,21 +2,25 @@
 
 require_once __DIR__ . "/../../Infrestructure/Repository/SQLRepository.php";
 require_once __DIR__ . "/../Mapping/Mapper.php";
+require_once __DIR__ . "/../../Infrestructure/Data/Connection.php";
 
-class ProductosController
+
+
+
+class ClienteController
 {
     private $repository;
 
     public function __construct()
     {
-        $this->repository = new SQLRepository("Productos");
+        $this->repository = new SQLRepository("Cliente", "clientes");
     }
 
     public function insert()
     {
         try {
-            $producto = Mapper::mapArray($_POST, new Productos());
-            $this->repository->insert($producto);
+            $cliente = Mapper::mapArray($_POST, new Cliente());
+            $this->repository->insert($cliente);
         } catch (\Throwable $th) {
             echo "error $th";
         }
@@ -28,24 +32,25 @@ class ProductosController
         switch ($_SERVER["REQUEST_METHOD"]) {
             case "GET":
                 if (isset($_GET["id"]))
-                    echo json_encode($this->repository->getById($_GET["id"], "idMaterial"));
+                    echo json_encode($this->repository->getById($_GET["id"], "idCliente"));
                 else
                     echo json_encode($this->repository->getAll());
                 break;
 
             case "POST":
+
                 var_dump($_POST);
                 if (isset($_POST['deleteId'])) {
                     echo "delete";
-                    $this->repository->delete($_POST['deleteId'], "idMaterial");
+                    $this->repository->delete($_POST['deleteId'], "idCliente");
                     return;
                 }
 
                 if (isset($_POST["updateId"])) {
-                    $producto = Mapper::mapArray($_POST, new Productos());
-                    $producto->setIdMaterial($_POST["updateId"]);
+                    $cliente = Mapper::mapArray($_POST, new Cliente());
+                    $cliente->setIdCliente($_POST["updateId"]);
                     try {
-                        $this->repository->update($producto, $_POST["updateId"], "idMaterial");
+                        $this->repository->update($cliente, $_POST["updateId"], "idCliente");
                     } catch (\Throwable $th) {
                         var_dump($th);
                     }
@@ -61,4 +66,4 @@ class ProductosController
 }
 
 
-(new ProductosController())->http_request();
+(new ClienteController())->http_request();

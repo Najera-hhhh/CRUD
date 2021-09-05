@@ -3,24 +3,47 @@ require __DIR__ . "/../../Domain/Interface/IRepository.php";
 require __DIR__ . "/../Data/Connection.php";
 require __DIR__ . "/../../Application/Mapping/Mapper.php";
 
-$files = glob("/srv/http/CRUD/Domain/Entities" . '/*.php');
+$files = glob(__DIR__ . "/../../Domain/Entities" . '/*.php');
 
 foreach ($files as $file) {
     require($file);
 }
 
+function str_replace_limit($search, $replace, $string, $limit = 1)
+{
+    $pos = strpos($string, $search);
+
+    if ($pos === false) {
+        return $string;
+    }
+
+    $searchLen = strlen($search);
+
+    for ($i = 0; $i < $limit; $i++) {
+        $string = substr_replace($string, $replace, $pos, $searchLen);
+
+        $pos = strpos($string, $search);
+
+        if ($pos === false) {
+            break;
+        }
+    }
+
+    return $string;
+}
+
 
 class SQLRepository  implements IRepository
 {
-    private $connection;
-    private $_context;
-    private $entity;
-    private $table;
+    protected $connection;
+    protected $_context;
+    protected $entity;
+    protected $table;
 
-    public function __construct($entity)
+    public function __construct($entity, $table = null)
     {
         $this->entity = $entity;
-        $this->table = strtolower($this->entity);
+        $this->table = $table == null ? strtolower($this->entity) : $table;
         $this->connection = new Connection();
         $this->_context = $this->connection->connection;
     }
@@ -72,7 +95,7 @@ class SQLRepository  implements IRepository
 
         foreach ($arrkey as $key => $value) {
             //añadir key a la consulta
-            $key = trim(str_replace(get_class($entity), "", $key));
+            $key = trim(str_replace_limit(get_class($entity), "", $key, 1)); //trim(str_replace(get_class($entity), "", $key));
             $nameKeys .= $key . ",";
 
             //añadir el valor de la key
@@ -85,10 +108,12 @@ class SQLRepository  implements IRepository
         $values = substr($values, 0, -1) . ")";
         $query = $query . $nameKeys . $values;
 
+
         var_dump($arrValue);
+        var_dump($query);
 
         $stm = $this->_context->prepare($query);
-        
+
         return $stm->execute($arrValue);
     }
 
@@ -99,4 +124,43 @@ class SQLRepository  implements IRepository
         $stm = $this->_context->prepare($sql);
         $stm->execute(array($id));
     }
+
+    public function update($entity, $id, $name = "id")
+    {
+        try {
+            $arrValue = array();
+            $arrkey = (array)$entity;
+            $query = "UPDATE " . $this->table . " SET ";
+        } catch (\Throwable $th) {
+            echo "Se esperaba un objeto " . $th;
+        }
+        $setValue = "";
+        foreach ($arrkey as $key => $value) {
+
+            //añadir key a la consulta
+            $key = trim(str_replace_limit(get_class($entity), "", $key, 1));
+            $setValue .= "$key = ";
+
+            //añadir el valor de la key
+            $key_method = ucfirst($key);
+            $insertValue = $entity->{"get" . $key}();
+            array_push($arrValue, $insertValue);
+
+            if (gettype($insertValue) == "string" and $insertValue != NULL)
+                $setValue .= " ?, ";
+            else if ($insertValue == NULL)
+                $setValue .= " ?, ";
+            else
+                $setValue .= $insertValue . ", ";
+        }
+
+        $query .= substr($setValue, 0, -2) . " WHERE $name = ?";
+        array_push($arrValue, $id);
+
+        var_dump($query);
+        $stm = $this->_context->prepare($query);
+        return $stm->execute($arrValue);
+    }
+
+
 }

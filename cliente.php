@@ -2,10 +2,6 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -25,52 +21,45 @@ error_reporting(E_ALL);
 <body>
 
     <div class="container">
-        <?php require_once "./partial/header.php" ?>
-        
+    <?php require_once "./partial/header.php" ?>
         <div class="panel">
             <form id="form-producto" class="mt-5">
                 <div class="mb-3">
-                    <label for="id" class="form-label">Id</label>
-                    <input type="text" class="form-control" name="idMaterial" id="id" required>
+                    <label for="descripcion" class="form-label">Razon social</label>
+                    <input type="text" class="form-control" name="razonSocial" id="razonSocial" required>
                 </div>
                 <div class="mb-3">
-                    <label for="descripcion" class="form-label">Descripcion</label>
-                    <input type="text" class="form-control" name="descripcion" id="descripcion" required>
-                </div>
-                <div class="mb-3">
-                    <label for="unidad" class="form-label">Unidad de medida</label>
-                    <input type="text" class="form-control" name="unidadMedida" id="unidad" required>
-                </div>
-                <div class="mb-3">
-                    <label for="precio" class="form-label">Precio</label>
-                    <input type="number" class="form-control" step="0.1" name="precio1" id="precio" required>
+                    <label for="unidad" class="form-label">RFC</label>
+                    <input type="text" class="form-control" name="RFC" id="RFC" required>
                 </div>
                 <div class="mb-3 mx-auto text-center">
-                    <button class="btn btn-success">Enviar</button>
+                    <button type="submit" class="btn btn-success" id="guardar">Enviar</button>
                 </div>
             </form>
             <div>
                 <table class="table table-ligth w-75 mx-auto mt-5">
                     <thead>
-                        <th>Id</th>
-                        <th>Descripcion</th>
-                        <th>Unidad de medida</th>
-                        <th>Precio</th>
-                        <th></th>
+                        <th>id</th>
+                        <th>Razon social</th>
+                        <th>RFC</th>
                     </thead>
-                    <tbody>
-
+                    <tbody id="clientes">
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+
+
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
 
 
-    <script src="assets/js/index.js"></script>
+    <script src="assets/js/cliente.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 function recharge() {
 
-    $.get("/Application/Controller/ProductosController.php", function(result) {
+    $.get("./Application/Controller/ProductosController.php", function(result) {
 
         })
         .done(function(result) {
@@ -30,7 +30,7 @@ $('form').on("submit", function(e) {
     e.preventDefault();
     // Create an FormData object 
     console.log(data);
-    $.post("/Application/Controller/ProductosController.php", data)
+    $.post("./Application/Controller/ProductosController.php", data)
         .done(function(data) {
             recharge();
         });
@@ -41,7 +41,7 @@ $('form').on("submit", function(e) {
 $(document).on("click", ".delete", function() {
 
     $.ajax({
-        url: "/Application/Controller/ProductosController.php",
+        url: "./Application/Controller/ProductosController.php",
         type: "POST",
         data: {
             deleteId: $(this).attr("id")
