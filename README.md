@@ -1,3 +1,4 @@
+<pre>
 Estructura
 
 ├── Application
@@ -14,3 +15,4 @@ Estructura
 │   │   └── scripts <-copia de la bd
 │   └── Repository
 └── partial
+</pre>
